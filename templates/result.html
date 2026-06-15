@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VoxLens Result</title>
+
+<style>
+body{
+background:#050816;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+.box{
+max-width:700px;
+margin:auto;
+padding:30px;
+border-radius:20px;
+background:#0f172a;
+box-shadow:0 0 25px cyan;
+}
+
+img{
+width:100%;
+border-radius:15px;
+}
+
+.bar{
+height:20px;
+background:cyan;
+border-radius:10px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:10px;
+background:#00e5ff;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>VoxLens Result</h1>
+
+<p><b>Prediction:</b> {{result}}</p>
+<p><b>Confidence:</b> {{confidence}}%</p>
+<p><b>Risk:</b> {{risk}}</p>
+<p><b>Duration:</b> {{duration}} sec</p>
+<p><b>File Size:</b> {{file_size}} KB</p>
+<p><b>Reason:</b> {{reasons}}</p>
+
+<img
+id="spec"
+src="data:image/png;base64,{{spectrogram}}"
+style="width:100%;border-radius:15px;">
+
+<br><br>
+
+
+
+<button onclick="saveReport()">
+Download Report
+</button>
+
+<script>
+
+function saveReport(){
+
+let win = window.open("", "_blank");
+
+win.document.write(`
+
+<h1>VOXLENS REPORT</h1>
+
+<p>Prediction: {{result}}</p>
+
+<p>Confidence: {{confidence}}%</p>
+
+<p>Risk: {{risk}}</p>
+
+<p>Duration: {{duration}} sec</p>
+
+<p>File Size: {{file_size}} KB</p>
+
+<p>Reason: {{reasons}}</p>
+
+<h3>Spectrogram</h3>
+
+<img src="data:image/png;base64,{{spectrogram}}" width="700">
+
+`);
+
+win.print();
+win.close();
+}
+
+</script>
+
+</script>
+
+<br><br>
+
+<a href="/home">
+<button>Analyze Another Audio</button>
+</a>
+
+</div>
+
+</body>
+</html>
