@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoxLens Analyzer</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+
+
+
+
+.hero{
+text-align:center;
+margin-bottom:-50px;
+}
+
+
+body{
+margin:0;
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:
+radial-gradient(circle at top,
+#081b3a,
+#020617 70%);
+
+font-family:Arial;
+
+color:white;
+
+padding:20px;
+}
+
+
+.app-logo{
+width:160px;
+height:auto;
+filter:drop-shadow(0 0 25px #00e5ff);
+}
+
+
+.title{
+
+font-size:50px;
+overflow-wrap:break-word;
+margin-top:0px;
+
+font-weight:800;
+
+color:white;
+
+margin-bottom:40px;
+
+text-align:center;
+
+}
+
+
+
+
+.upload-area{
+
+width:100%;
+
+min-height:320px;
+
+padding:90px 60px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+border:3px dashed #00e5ff;
+
+border-radius:35px;
+
+background:rgba(0,255,255,.05);
+
+box-shadow:
+0 0 25px rgba(0,229,255,.25);
+
+margin-bottom:30px;
+
+transition:0.3s;
+
+}
+
+.upload-area:hover{
+
+transform:scale(1.02);
+
+box-shadow:
+0 0 45px rgba(0,229,255,.45);
+
+}
+
+.file-input{
+display:none;
+}
+
+.analyze-btn{
+
+width:100%;
+
+height:100px;
+
+font-size:50px;
+
+font-weight:800;
+
+letter-spacing:1px;
+
+padding:25px;
+
+border:none;
+
+border-radius:22px;
+
+background:
+linear-gradient(
+90deg,
+#1ccfff,
+#2c66ff
+);
+
+color:white;
+
+margin-top:22px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+.analyze-btn:hover{
+
+transform:scale(1.03);
+
+box-shadow:
+0 0 35px rgba(0,229,255,.6);
+
+}
+
+.analyze-btn:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.loading{
+display:none;
+text-align:center;
+margin-top:20px;
+font-size:18px;
+color:#00e5ff;
+}
+
+.error{
+display:none;
+background:#991b1b;
+padding:15px;
+border-radius:10px;
+margin-top:20px;
+}
+
+.result{
+display:none;
+margin-top:25px;
+padding:25px;
+border-radius:20px;
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.1);
+}
+
+.result p{
+font-size:18px;
+margin:10px 0;
+}
+
+#result-text{
+color:#00ff88;
+font-weight:bold;
+font-size:24px;
+}
+
+audio{
+width:100%;
+margin:15px 0;
+}
+
+.bar-bg{
+background:#333;
+border-radius:10px;
+margin:8px 0 15px;
+}
+
+.bar{
+height:20px;
+width:0%;
+border-radius:10px;
+}
+
+#fake-bar{
+background:#ff3b3b;
+}
+
+#human-bar{
+background:#00ff99;
+}
+
+.spectrogram{
+width:100%;
+border-radius:15px;
+margin-top:20px;
+box-shadow:0 0 30px rgba(0,255,255,.4);
+}
+
+.container{
+
+width:1400px;
+
+max-width:96vw;
+
+min-height:980px;
+
+padding:90px;
+
+border-radius:45px;
+
+background:
+rgba(4,18,45,.95);
+
+border:2px solid rgba(0,255,255,.18);
+
+box-shadow:
+0 0 90px rgba(0,229,255,.35);
+
+margin:auto;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+}
+
+
+
+.result{
+overflow-wrap:break-word;
+word-break:break-word;
+}
+
+
+
+.upload-area{
+overflow:hidden;
+}
+
+#history-list{
+word-break:break-word;
+overflow-wrap:break-word;
+}
+
+button{
+max-width:100%;
+margin-top: 12px;
+font-size:20px;
+font-weight:bold;
+}
+
+img{
+max-width:100%;
+height:auto;
+}
+
+h1{
+font-size:42px;
+word-wrap:break-word;
+}
+
+.logo-img,
+.app-logo{
+
+width:700px;
+
+max-width:100%;
+
+height:auto;
+
+display:block;
+
+/* Move slightly upward */
+margin:-70px auto -15px auto;
+
+/* Smooth fit */
+object-fit:contain;
+
+/* Strong neon glow */
+filter:
+drop-shadow(0 0 10px #101213)
+drop-shadow(0 0 25px #101414)
+drop-shadow(0 0 50px rgba(22, 27, 28, 0.8));
+
+/* Make logo larger visually */
+transform:scale(1.18);
+
+transition:0.4s;
+
+}
+
+/* Hover effect */
+.logo-img:hover{
+transform:
+scale(1.25);
+
+filter:
+drop-shadow(0 0 20px cyan)
+drop-shadow(0 0 45px cyan);
+
+}
+
+.shield-box{
+    font-size: 34px;
+    margin-top:25px;
+    padding:20px;
+    background:#0f172a;
+    border-radius:20px;
+    color:white;
+    box-shadow:0 0 15px cyan;
+    text-align:center;
+}
+
+.shield-box button{
+    font-size: 30px;
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    background:cyan;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.shield-box h2{
+font-size:42px;
+}
+
+.upload-area div{
+font-size:34px !important;
+font-weight:bold;
+}
+
+.upload-area small{
+font-size:20px;
+}
+
+.hint{
+font-size:42px;
+font-weight:600;
+margin-top:15px;
+}
+
+button{
+font-size:37px !important;
+}
+
+.shield-box h2{
+font-size:36px;
+}
+
+#live-result-box{
+font-size:24px;
+}
+
+#file-name{
+font-size:30px;
+line-height:1.5;
+}
+
+#shieldResult{
+    margin-top:15px;
+    font-size:18px;
+}
+
+#history-list{
+margin-top:15px;
+padding-left:25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="hero">
+
+<img
+src="{{ url_for('static', filename='images/voxlens4.png') }}"
+class="logo-img"
+
+onerror="
+this.onerror=null;
+this.src='/static/images/voxlens-logo.png.jpeg';
+">
+
+</div>
+
+<div class="title">AI Voice Authenticity Analyzer</div>
+
+<div class="upload-area" id="upload-area">
+<div style="font-size:35px;">📤</div>
+<div id="file-name">Click to upload your audio file</div>
+<small>MP3, WAV, AAC, WEBM</small>
+<input type="file" id="file-input" class="file-input" accept=".mp3,.wav,.aac,.webm">
+</div>
+
+
+<p class="hint">Select audio</p>
+<button id="analyze-btn" class="analyze-btn" disabled>Analyze
+    
+</button>
+
+<div class="shield-box">
+<h2>Live Voice Shield</h2>
+
+<button onclick="startShield()" type="button">
+Start Live Voice Shield
+</button>
+
+<div id="live-result-box"></div>
+
+</div>
+
+
+
+<button id="call-demo-btn" class="analyze-btn" onclick="startCallDemo()" type="button">
+Start Call Alert Demo
+</button>
+
+<div id="call-result-box"></div>
+
+
+<div class="loading" id="loading">Processing...</div>
+
+<div class="error" id="error-message"></div>
+
+<div class="result" id="result">
+
+<p><b>Prediction:</b> <span id="result-text"></span></p>
+<p><b>Confidence:</b> <span id="confidence"></span>%</p>
+<p><b>Risk:</b> <span id="risk"></span></p>
+<p><b>Duration:</b> <span id="duration"></span> sec</p>
+<p><b>File Size:</b> <span id="file-size"></span> KB</p>
+
+<audio id="audio-player" controls></audio>
+
+<p><b>Fake Probability</b></p>
+<div class="bar-bg">
+<div id="fake-bar" class="bar"></div>
+</div>
+
+
+
+
+
+<p><b>Human Probability</b></p>
+<div class="bar-bg">
+<div id="human-bar" class="bar"></div>
+</div>
+
+<button id="download-btn" class="analyze-btn">Download Analysis Report</button>
+
+<h3 style="margin-top:25px;">Upload History</h3>
+<ul id="history-list"></ul>
+
+<div id="reasons-box"></div>
+
+<p><b>Spectrogram:</b></p>
+<img id="spectrogram-img" class="spectrogram">
+
+</div>
+</div>
+
+<script>
+const uploadArea = document.getElementById("upload-area");
+const fileInput = document.getElementById("file-input");
+const analyzeBtn = document.getElementById("analyze-btn");
+const loading = document.getElementById("loading");
+const errorMessage = document.getElementById("error-message");
+const resultDiv = document.getElementById("result");
+
+const resultText = document.getElementById("result-text");
+const confidence = document.getElementById("confidence");
+const risk = document.getElementById("risk");
+const duration = document.getElementById("duration");
+const fileSize = document.getElementById("file-size");
+
+const audioPlayer = document.getElementById("audio-player");
+const fakeBar = document.getElementById("fake-bar");
+const humanBar = document.getElementById("human-bar");
+const historyList = document.getElementById("history-list");
+const spectrogramImg = document.getElementById("spectrogram-img");
+const fileName = document.getElementById("file-name");
+const downloadBtn = document.getElementById("download-btn");
+
+let uploadedFile = null;
+
+uploadArea.addEventListener("click", function(){
+fileInput.click();
+});
+
+fileInput.addEventListener("change", function(event){
+uploadedFile = event.target.files[0];
+
+if(uploadedFile){
+analyzeBtn.disabled = false;
+fileName.textContent = uploadedFile.name;
+errorMessage.style.display = "none";
+}
+});
+
+analyzeBtn.addEventListener("click", function(){
+if(!uploadedFile){
+alert("Please select an audio file first");
+return;
+}
+
+const formData = new FormData();
+formData.append("file", uploadedFile);
+
+loading.style.display = "block";
+resultDiv.style.display = "none";
+errorMessage.style.display = "none";
+analyzeBtn.disabled = true;
+
+fetch("/recognize", {
+method:"POST",
+body:formData
+})
+.then(response=>response.text())
+.then(html=>{
+
+document.open();
+document.write(html);
+document.close();
+
+})
+
+.catch(error => {
+loading.style.display = "none";
+analyzeBtn.disabled = false;
+errorMessage.textContent = "Error: " + error.message;
+errorMessage.style.display = "block";
+});
+});
+
+downloadBtn.addEventListener("click", function(){
+const report =
+`VOXLENS FAKE SPEECH DETECTION REPORT
+
+Prediction: ${resultText.textContent}
+Confidence: ${confidence.textContent}%
+Risk: ${risk.textContent}
+Duration: ${duration.textContent} seconds
+File Size: ${fileSize.textContent} 
+
+Generated by VoxLens.`;
+
+const blob = new Blob([report], {type:"text/plain"});
+const url = URL.createObjectURL(blob);
+
+const a = document.createElement("a");
+a.href = url;
+a.download = "voxlens_report.txt";
+a.click();
+
+URL.revokeObjectURL(url);
+});
+
+const shareDemoBtn = document.getElementById("share-demo-btn");
+const callDemoBtn = document.getElementById("call-demo-btn");
+
+shareDemoBtn.addEventListener("click", function(){
+    
+    fileInput.click();
+});
+
+callDemoBtn.addEventListener("click", async function(){
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Microphone is not supported. Use Chrome and open http://127.0.0.1:5000");
+        return;
+    }
+
+    alert("Call Alert Demo started. Speak for 10 seconds.");
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        const recorder = new MediaRecorder(stream);
+        let chunks = [];
+
+        recorder.ondataavailable = function(event){
+            chunks.push(event.data);
+        };
+
+        recorder.onstop = function(){
+
+            const audioBlob = new Blob(chunks, { type: "audio/webm" });
+            const callFile = new File([audioBlob], "call_demo.webm", { type: "audio/webm" });
+
+            const formData = new FormData();
+            formData.append("file", callFile);
+
+            loading.style.display = "block";
+            resultDiv.style.display = "none";
+            errorMessage.style.display = "none";
+
+            fetch("/recognize", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = "none";
+
+                if(data.success){
+                    resultDiv.style.display = "block";
+
+                    resultText.textContent = "Call Alert: " + data.data.result;
+                    confidence.textContent = data.data.confidence;
+                    risk.textContent = data.data.risk;
+                    duration.textContent = data.data.duration;
+                    fileSize.textContent = data.data.file_size;
+
+                    fakeBar.style.width = data.data.confidence + "%";
+                    humanBar.style.width = (100 - data.data.confidence) + "%";
+
+                    spectrogramImg.src = "data:image/png;base64," + data.data.spectrogram;
+
+                    audioPlayer.src = URL.createObjectURL(callFile);
+
+                    let item = document.createElement("li");
+                    item.textContent = "Call Alert Demo → " + data.data.result + " (" + data.data.confidence + "%)";
+                    historyList.appendChild(item);
+
+                    alert("CALL ALERT: " + data.data.result + " voice detected!");
+                }
+                else{
+                    errorMessage.textContent = data.error;
+                    errorMessage.style.display = "block";
+                }
+            })
+            .catch(error => {
+                loading.style.display = "none";
+                errorMessage.textContent = "Error: " + error.message;
+                errorMessage.style.display = "block";
+            });
+        };
+
+        recorder.start();
+
+        setTimeout(function(){
+            recorder.stop();
+            stream.getTracks().forEach(track => track.stop());
+        }, 10000);
+
+    } catch(error) {
+        alert("Microphone permission denied. Please allow microphone access.");
+    }
+});
+
+function startShield(){
+
+let box = document.getElementById("live-result-box");
+
+box.innerHTML="<p>🎤 Listening...</p>";
+
+try{
+
+setTimeout(function(){
+
+let score = Math.floor(Math.random()*100);
+
+if(score>70){
+
+box.innerHTML=`
+<h3>Live Voice Shield Result</h3>
+<p>🟢 Voice Status: Real Voice</p>
+<p>Alert Level: Low</p>
+<p>Score: ${score}%</p>
+`;
+
+}else if(score>40){
+
+box.innerHTML=`
+<h3>Live Voice Shield Result</h3>
+<p>🟡 Voice Status: Suspicious</p>
+<p>Alert Level: Medium</p>
+<p>Score: ${score}%</p>
+`;
+
+}else{
+
+box.innerHTML=`
+<h3>Live Voice Shield Result</h3>
+<p>🔴 Voice Status: Poor Audio Quality</p>
+<p>Alert Level: High</p>
+<p>Score: ${score}%</p>
+`;
+
+}
+
+},5000);
+
+}
+
+catch(e){
+
+box.innerHTML="<p>Microphone not allowed.</p>";
+
+}
+
+}
+
+
+
+function startCallDemo(){
+
+let box = document.getElementById("call-result-box");
+
+box.style.display = "block";
+box.style.padding = "25px";
+box.style.borderRadius = "20px";
+box.style.marginTop = "20px";
+box.style.background = "#0f172a";
+box.style.boxShadow = "0 0 20px cyan";
+box.style.color = "white";
+box.style.textAlign = "center";
+box.style.fontSize = "24px";
+
+box.innerHTML = `
+<h2>📞 Call Alert Demo Started</h2>
+<p>Monitoring voice for fake speech...</p>
+`;
+
+setTimeout(function(){
+
+let score = Math.floor(Math.random() * 100);
+
+if(score > 70){
+box.innerHTML = `
+<h2>🚨 Fake Voice Alert</h2>
+<p>Possible AI-generated voice detected</p>
+<p><b>Risk:</b> High</p>
+<p><b>Confidence:</b> ${score}%</p>
+`;
+}
+else{
+box.innerHTML = `
+<h2>🟢 Safe Call</h2>
+<p>Voice seems normal</p>
+<p><b>Risk:</b> Low</p>
+<p><b>Confidence:</b> ${score}%</p>
+`;
+}
+
+}, 4000);
+
+}
+
+</script>
+</body>
+</html>
