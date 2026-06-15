@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VoxLens</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:radial-gradient(circle,#0f172a,#020617);
+color:white;
+font-family:Arial;
+}
+
+
+.box{
+
+width:750px;
+
+max-width:90vw;
+
+padding:90px 70px;
+
+border-radius:40px;
+
+background:rgba(255,255,255,.08);
+
+box-shadow:0 0 60px cyan;
+
+text-align:center;
+
+}
+
+
+.logo-img{
+
+width:800px;
+
+max-width:100%;
+
+height:auto;
+
+display:block;
+
+margin:-40px auto -100px auto;
+
+
+filter:
+drop-shadow(0 0 10px #101213)
+drop-shadow(0 0 25px #101414)
+drop-shadow(0 0 50px rgba(22, 27, 28, 0.8));
+
+}
+
+h1{
+
+font-size:75px;
+
+
+margin-top:0px;
+
+margin-bottom:15px;
+
+}
+
+
+
+.subtitle{
+font-size:40px;
+text-align:center;
+margin-bottom:35px;
+color:#8be9fd;
+letter-spacing:2px;
+}
+
+button{
+width:500px;
+height: 100px;
+padding:25px 60px;
+
+font-size:34px;
+
+border-radius:18px;
+
+background:
+linear-gradient(
+90deg,
+#48c1f5
+);
+
+color:white;
+
+}
+
+button:hover{
+transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+
+<img src="{{ url_for('static', filename='images/voxlens4.png') }}" 
+     alt="VoxLens Logo" 
+     class="logo-img">
+
+<h1>VoxLens</h1>
+
+<p class="subtitle">See Beyond the Sound</p>
+
+
+
+<a href="/home">
+<button>Start Analysis</button>
+</a>
+
+</div>
+</body>
+</html>
